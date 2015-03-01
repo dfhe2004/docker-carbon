@@ -33,19 +33,10 @@ RUN cd whisper && git checkout master && python setup.py install
 RUN cd carbon && git checkout 0.9.x && python setup.py install
 RUN cd graphite-web && git checkout 0.9.x && python check-dependencies.py; python setup.py install
 
-# make use of cache from dockerana/carbon
-RUN apt-get -y install gunicorn
-
-RUN mkdir -p /opt/graphite/webapp
-WORKDIR /opt/graphite/webapp
-
-ENV GRAPHITE_STORAGE_DIR /opt/graphite/storage
-ENV GRAPHITE_CONF_DIR /opt/graphite/conf
-ENV PYTHONPATH /opt/graphite/webapp
-
-
 
 # config files
+ADD initial_data.json /opt/graphite/webapp/graphite/initial_data.json 
+ADD local_settings.py /opt/graphite/webapp/graphite/local_settings.py 
 ADD carbon.conf /opt/graphite/conf/carbon.conf
 ADD storage-schemas.conf /opt/graphite/conf/storage-schemas.conf
 ADD storage-aggregation.conf /opt/graphite/conf/storage-aggregation.conf
@@ -55,6 +46,10 @@ RUN touch /opt/graphite/storage/graphite.db /opt/graphite/storage/index
 RUN chown -R www-data /opt/graphite/storage
 RUN chmod 0775 /opt/graphite/storage /opt/graphite/storage/whisper
 RUN chmod 0664 /opt/graphite/storage/graphite.db
+RUN cd /opt/graphite/webapp/graphite && python manage.py syncdb --noinput
+
+RUN apt-get -y install gunicorn
+RUN mkdir -p /opt/graphite/webapp
 
 
 
@@ -65,5 +60,15 @@ ADD config.js /src/statsd/config.js
 
 EXPOSE 8125/udp 8126 8000
 
-CMD ["/usr/bin/node", "/src/statsd/stats.js", "/src/statsd/config.js"]
+CMD ["/usr/bin/nodejs", "/src/statsd/stats.js", "/src/statsd/config.js"]
 CMD ["/opt/graphite/bin/carbon-cache.py", "--debug", "start"]
+
+
+# make use of cache from dockerana/carbon
+WORKDIR /opt/graphite/webapp
+
+ENV GRAPHITE_STORAGE_DIR /opt/graphite/storage
+ENV GRAPHITE_CONF_DIR /opt/graphite/conf
+ENV PYTHONPATH /opt/graphite/webapp
+
+CMD ["/usr/bin/gunicorn_django", "-b0.0.0.0:8000", "-w2", "graphite/settings.py"]
