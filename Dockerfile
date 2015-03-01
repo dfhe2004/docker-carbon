@@ -4,14 +4,13 @@ MAINTAINER whoami <who@am.i>
 ADD ./sources.list  /etc/apt/sources.list
 
 RUN apt-get -y update
-RUN apt-get -y install software-properties-common
-RUN apt-get -y install python-software-properties
-#RUN add-apt-repository ppa:chris-lea/node.js
+RUN apt-get -y install software-properties-common \
+		       python-software-properties
+
 RUN apt-get -y install git \
                        nodejs
 
-RUN apt-get -y install git \
-                       python-simplejson \
+RUN apt-get -y install python-simplejson \
                        python-memcache \
                        python-pysqlite2 \
                        python-support \
