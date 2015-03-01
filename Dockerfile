@@ -6,7 +6,7 @@ ADD ./sources.list  /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y install software-properties-common
 RUN apt-get -y install python-software-properties
-RUN add-apt-repository ppa:chris-lea/node.js
+#RUN add-apt-repository ppa:chris-lea/node.js
 RUN apt-get -y install git \
                        nodejs
 
