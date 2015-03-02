@@ -20,7 +20,7 @@ RUN apt-get -y install python-django \
                        python-pysqlite2 \
                        python-support \
                        python-pip \
-		       gunicorn supervisor ngix-light
+		       gunicorn supervisor nginx-light
 
 
 
