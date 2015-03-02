@@ -35,6 +35,7 @@ RUN cd carbon && git checkout 0.9.x && python setup.py install
 RUN cd graphite-web && git checkout 0.9.x && python check-dependencies.py; python setup.py install
 
 ADD nginx.conf /etc/nginx/nginx.conf
+ADD default/supervisord.conf /etc/supervisor/supervisord.conf
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 
