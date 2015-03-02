@@ -48,6 +48,7 @@ ADD storage-aggregation.conf /opt/graphite/conf/storage-aggregation.conf
 RUN mkdir -p /opt/graphite/storage/whisper
 RUN touch /opt/graphite/storage/graphite.db /opt/graphite/storage/index
 RUN chown -R www-data /opt/graphite/storage
+RUN chown -R www-data /opt/graphite/webapp
 RUN chmod 0775 /opt/graphite/storage /opt/graphite/storage/whisper
 RUN chmod 0664 /opt/graphite/storage/graphite.db
 RUN cd /opt/graphite/webapp/graphite && python manage.py syncdb --noinput
