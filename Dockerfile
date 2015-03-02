@@ -38,8 +38,6 @@ ADD nginx.conf /etc/nginx/nginx.conf
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 
-
-
 # config files
 ADD initial_data.json /opt/graphite/webapp/graphite/initial_data.json 
 ADD local_settings.py /opt/graphite/webapp/graphite/local_settings.py 
@@ -56,23 +54,9 @@ RUN cd /opt/graphite/webapp/graphite && python manage.py syncdb --noinput
 
 RUN mkdir -p /opt/graphite/webapp
 
-#EXPOSE 2003 2004 7002
-
 RUN mkdir /src && git clone https://github.com/etsy/statsd.git /src/statsd
 ADD config.js /src/statsd/config.js
 
 EXPOSE 8125/udp 8126 80
 
-#CMD ["/usr/bin/nodejs", "/src/statsd/stats.js", "/src/statsd/config.js"]
-#CMD ["/opt/graphite/bin/carbon-cache.py", "--debug", "start"]
-
-
-# make use of cache from dockerana/carbon
-#WORKDIR /opt/graphite/webapp
-
-#ENV GRAPHITE_STORAGE_DIR /opt/graphite/storage
-#ENV GRAPHITE_CONF_DIR /opt/graphite/conf
-#ENV PYTHONPATH /opt/graphite/webapp
-
-#CMD ["/usr/bin/gunicorn_django", "-b0.0.0.0:8000", "-w2", "graphite/settings.py"]
 CMD  ["/usr/bin/supervisord"]
