@@ -58,6 +58,7 @@ RUN mkdir -p /opt/graphite/webapp
 RUN mkdir /src && git clone https://github.com/etsy/statsd.git /src/statsd
 ADD config.js /src/statsd/config.js
 
-EXPOSE 8125/udp 8126 80
+#EXPOSE 8125/udp 8126 80
+EXPOSE 8125 8126 80
 
 CMD  ["/usr/bin/supervisord"]
